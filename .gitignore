@@ -1,0 +1,27 @@
+# Data and GIS
+data/
+*.tif
+*.tiff
+*.jp2
+*.zip
+*.tar.gz
+
+# Python
+__pycache__/
+*.py[cod]
+
+# Virtual environments
+venv/
+env/
+.venv/
+
+# IDE and OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# QGIS and Jupyter
+*.qgs~
+*.qgz~
+.ipynb_checkpoints/
