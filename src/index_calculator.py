@@ -44,10 +44,16 @@ def main():
     dataset_b4 = None
     dataset_b8 = None
 
-
     # Index calculation (NDVI and NDWI)
     print('Calculating indices...')
-    # TODO: implement math formulas
+    denominator_ndvi = array_nir + array_red
+    ndvi = np.where(denominator_ndvi == 0, 0.0, (array_nir - array_red) / denominator_ndvi).astype(np.float32)
+    
+    denominator_ndwi = array_green + array_nir
+    ndwi = np.where(denominator_ndwi == 0, 0.0, (array_green - array_nir) / denominator_ndwi).astype(np.float32)
+    
+    print(f'  NDVI  min={ndvi.min():.4f}  max={ndvi.max():.4f}  mean={ndvi.mean():.4f}')
+    print(f'  NDWI  min={ndwi.min():.4f}  max={ndwi.max():.4f}  mean={ndwi.mean():.4f}')
 
     # Saving results to GeoTIFF
     print('Saving output files...')
