@@ -12,6 +12,27 @@ BAND_8_PATH = os.path.join(DATA_DIR, 'T34UDU_20210708T094029_B08_10m.jp2') # NIR
 OUTPUT_NDVI_PATH = '../data/eger_ndvi_2021.tif'
 OUTPUT_NDWI_PATH = '../data/eger_ndwi_2021.tif'
 
+def load_band(path: str) -> np.ndarray:
+    """Open a single-band raster file and return its data as a float32 array."""
+    dataset = gdal.Open(path)
+    if dataset is None:
+        raise IOError(f'GDAL could not open file: {path}')
+    array = dataset.GetRasterBand(1).ReadAsArray().astype(np.float32)
+    dataset = None
+    return array
+
+def get_raster_metadata(path: str) -> tuple:
+    """Extract spatial metadata (geotransform, projection, dimensions) from a raster file."""
+    dataset = gdal.Open(path)
+    if dataset is None:
+        raise IOError(f'GDAL could not open file: {path}')
+    geotransform = dataset.GetGeoTransform()
+    projection = dataset.GetProjection()
+    cols = dataset.RasterXSize
+    rows = dataset.RasterYSize
+    dataset = None
+    return geotransform, projection, cols, rows
+
 def main():
     print('Starting Sentinel-2 Index Calculation...')
 
@@ -22,27 +43,10 @@ def main():
     
     # Readig data with GDAL
     print('Loading satellite bands...')
-     
-    dataset_b3 = gdal.Open(BAND_3_PATH)
-    dataset_b4 = gdal.Open(BAND_4_PATH)
-    dataset_b8 = gdal.Open(BAND_8_PATH)
-
-    if dataset_b3 is None or dataset_b4 is None or dataset_b8 is None:
-        print("Error: Could not open datasets with GDAL")
-        return
-    
-    geotransform = dataset_b8.GetGeoTransform()
-    projection = dataset_b8.GetProjection()
-    cols = dataset_b8.RasterXSize
-    rows = dataset_b8.RasterYSize
-
-    array_green = dataset_b3.GetRasterBand(1).ReadAsArray().astype(np.float32)
-    array_red = dataset_b4.GetRasterBand(1).ReadAsArray().astype(np.float32)
-    array_nir = dataset_b8.GetRasterBand(1).ReadAsArray().astype(np.float32)
-
-    dataset_b3 = None
-    dataset_b4 = None
-    dataset_b8 = None
+    array_green = load_band(BAND_3_PATH)
+    array_red = load_band(BAND_4_PATH)
+    array_nir = load_band(BAND_8_PATH)
+    geotransform, projection, cols, rows = get_raster_metadata(BAND_8_PATH)
 
     # Index calculation (NDVI and NDWI)
     print('Calculating indices...')
