@@ -22,7 +22,28 @@ def main():
     
     # Readig data with GDAL
     print('Loading satellite bands...')
-    # TODO: open datasets and read as NumPy arrays
+     
+    dataset_b3 = gdal.Open(BAND_3_PATH)
+    dataset_b4 = gdal.Open(BAND_4_PATH)
+    dataset_b8 = gdal.Open(BAND_8_PATH)
+
+    if dataset_b3 is None or dataset_b4 is None or dataset_b8 is None:
+        print("Error: Could not open datasets with GDAL")
+        return
+    
+    geotransform = dataset_b8.GetGeoTransform()
+    projection = dataset_b8.GetProjection()
+    cols = dataset_b8.RasterXSize
+    rows = dataset_b8.RasterYSize
+
+    array_green = dataset_b3.GetRasterBand(1).ReadAsArray().astype(np.float32)
+    array_red = dataset_b4.GetRasterBand(1).ReadAsArray().astype(np.float32)
+    array_nir = dataset_b8.GetRasterBand(1).ReadAsArray().astype(np.float32)
+
+    dataset_b3 = None
+    dataset_b4 = None
+    dataset_b8 = None
+
 
     # Index calculation (NDVI and NDWI)
     print('Calculating indices...')
