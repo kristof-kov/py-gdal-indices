@@ -57,7 +57,21 @@ def main():
 
     # Saving results to GeoTIFF
     print('Saving output files...')
-    # TODO: write arrays to .tif files with spatial references
+    driver = gdal.GetDriverByName('GTiff')
+    
+    out_ndvi = driver.Create(OUTPUT_NDVI_PATH, cols, rows, 1, gdal.GDT_Float32)
+    out_ndvi.SetGeoTransform(geotransform)
+    out_ndvi.SetProjection(projection)
+    out_ndvi.GetRasterBand(1).WriteArray(ndvi)
+    out_ndvi.GetRasterBand(1).FlushCache()
+    out_ndvi = None
+    
+    out_ndwi = driver.Create(OUTPUT_NDWI_PATH, cols, rows, 1, gdal.GDT_Float32)
+    out_ndwi.SetGeoTransform(geotransform)
+    out_ndwi.SetProjection(projection)
+    out_ndwi.GetRasterBand(1).WriteArray(ndwi)
+    out_ndwi.GetRasterBand(1).FlushCache()
+    out_ndwi = None
 
 if __name__ == '__main__':
     main()
