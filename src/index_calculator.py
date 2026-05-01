@@ -3,6 +3,8 @@ import numpy as np
 from osgeo import gdal
 
 # Configuration and file paths
+gdal.UseExceptions()
+
 DATA_DIR = '../data/S2B_MSIL2A_20210708T094029_N0500_R036_T34UDU_20230203T071138.SAFE/GRANULE/L2A_T34UDU_A022656_20210708T094032/IMG_DATA/R10m'
 
 BAND_3_PATH = os.path.join(DATA_DIR, 'T34UDU_20210708T094029_B03_10m.jp2') # green
@@ -33,6 +35,20 @@ def get_raster_metadata(path: str) -> tuple:
     dataset = None
     return geotransform, projection, cols, rows
 
+def save_geotiff(array: np.ndarray, output_path: str,
+                 geotransform: tuple, projection: str,
+                 cols: int, rows: int) -> None:
+    """Write a 2D float32 array to a single-band GeoTIFF with spatial reference."""
+    driver = gdal.GetDriverByName('GTiff')
+    out_dataset = driver.Create(output_path, cols, rows, 1, gdal.GDT_Float32)
+    out_dataset.SetGeoTransform(geotransform)
+    out_dataset.SetProjection(projection)
+    out_dataset.GetRasterBand(1).WriteArray(array)
+    out_dataset.GetRasterBand(1).FlushCache()
+    out_dataset = None
+    print(f'  Saved: {output_path}')
+    
+
 def main():
     print('Starting Sentinel-2 Index Calculation...')
 
@@ -61,21 +77,8 @@ def main():
 
     # Saving results to GeoTIFF
     print('Saving output files...')
-    driver = gdal.GetDriverByName('GTiff')
-    
-    out_ndvi = driver.Create(OUTPUT_NDVI_PATH, cols, rows, 1, gdal.GDT_Float32)
-    out_ndvi.SetGeoTransform(geotransform)
-    out_ndvi.SetProjection(projection)
-    out_ndvi.GetRasterBand(1).WriteArray(ndvi)
-    out_ndvi.GetRasterBand(1).FlushCache()
-    out_ndvi = None
-    
-    out_ndwi = driver.Create(OUTPUT_NDWI_PATH, cols, rows, 1, gdal.GDT_Float32)
-    out_ndwi.SetGeoTransform(geotransform)
-    out_ndwi.SetProjection(projection)
-    out_ndwi.GetRasterBand(1).WriteArray(ndwi)
-    out_ndwi.GetRasterBand(1).FlushCache()
-    out_ndwi = None
+    save_geotiff(ndvi, OUTPUT_NDVI_PATH, geotransform, projection, cols, rows)
+    save_geotiff(ndwi, OUTPUT_NDWI_PATH, geotransform, projection, cols, rows)
 
 if __name__ == '__main__':
     main()
