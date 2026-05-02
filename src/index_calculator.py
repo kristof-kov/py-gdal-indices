@@ -57,7 +57,7 @@ def main():
         print(f'Error: Could not find source files')
         return
     
-    # Readig data with GDAL
+    # Reading data with GDAL
     print('Loading satellite bands...')
     array_green = load_band(BAND_3_PATH)
     array_red = load_band(BAND_4_PATH)
