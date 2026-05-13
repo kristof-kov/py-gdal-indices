@@ -40,6 +40,7 @@ def save_geotiff(array: np.ndarray, output_path: str,
                  geotransform: tuple, projection: str,
                  cols: int, rows: int) -> None:
     """Write a 2D float32 array to a single-band GeoTIFF with spatial reference."""
+    os.makedirs(os.path.dirname(output_path), exist_ok=True)
     driver = gdal.GetDriverByName('GTiff')
     out_dataset = driver.Create(output_path, cols, rows, 1, gdal.GDT_Float32)
     out_dataset.SetGeoTransform(geotransform)
