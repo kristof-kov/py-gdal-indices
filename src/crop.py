@@ -3,15 +3,16 @@ from osgeo import gdal
 
 gdal.UseExceptions()
 
-INPUT_DIR = '../data/S2B_MSIL2A_20210708T094029_N0500_R036_T34UDU_20230203T071138.SAFE/GRANULE/L2A_T34UDU_A022656_20210708T094032/IMG_DATA/R10m'
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+DATA_DIR = os.path.join(BASE_DIR, 'data', 'S2B_MSIL2A_20210708T094029_N0500_R036_T34UDU_20230203T071138.SAFE/GRANULE/L2A_T34UDU_A022656_20210708T094032/IMG_DATA/R10m')
 
-BAND_3_INPUT = os.path.join(INPUT_DIR, 'T34UDU_20210708T094029_B03_10m.jp2')
-BAND_4_INPUT = os.path.join(INPUT_DIR, 'T34UDU_20210708T094029_B04_10m.jp2')
-BAND_8_INPUT = os.path.join(INPUT_DIR, 'T34UDU_20210708T094029_B08_10m.jp2')
+BAND_3_INPUT = os.path.join(DATA_DIR, 'T34UDU_20210708T094029_B03_10m.jp2')
+BAND_4_INPUT = os.path.join(DATA_DIR, 'T34UDU_20210708T094029_B04_10m.jp2')
+BAND_8_INPUT = os.path.join(DATA_DIR, 'T34UDU_20210708T094029_B08_10m.jp2')
 
-BAND_3_OUTPUT = '../data/cropped_B03.tif'
-BAND_4_OUTPUT = '../data/cropped_B04.tif'
-BAND_8_OUTPUT = '../data/cropped_B08.tif'
+BAND_3_OUTPUT = os.path.join(BASE_DIR, 'data', 'cropped_B03.tif')
+BAND_4_OUTPUT = os.path.join(BASE_DIR, 'data', 'cropped_B04.tif')
+BAND_8_OUTPUT = os.path.join(BASE_DIR, 'data', 'cropped_B08.tif')
 
 # bounding box in WGS84
 # covers Eger and surroundings

@@ -1,5 +1,6 @@
 # Data and GIS
 data/
+results/
 *.tif
 *.tiff
 *.jp2

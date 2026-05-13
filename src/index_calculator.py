@@ -5,14 +5,15 @@ from osgeo import gdal
 # Configuration and file paths
 gdal.UseExceptions()
 
-DATA_DIR = '../data/S2B_MSIL2A_20210708T094029_N0500_R036_T34UDU_20230203T071138.SAFE/GRANULE/L2A_T34UDU_A022656_20210708T094032/IMG_DATA/R10m'
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+DATA_DIR = os.path.join(BASE_DIR, 'data', 'S2B_MSIL2A_20210708T094029_N0500_R036_T34UDU_20230203T071138.SAFE/GRANULE/L2A_T34UDU_A022656_20210708T094032/IMG_DATA/R10m')
 
 BAND_3_PATH = os.path.join(DATA_DIR, 'T34UDU_20210708T094029_B03_10m.jp2') # green
 BAND_4_PATH = os.path.join(DATA_DIR, 'T34UDU_20210708T094029_B04_10m.jp2') # red
 BAND_8_PATH = os.path.join(DATA_DIR, 'T34UDU_20210708T094029_B08_10m.jp2') # NIR
 
-OUTPUT_NDVI_PATH = '../data/eger_ndvi_2021.tif'
-OUTPUT_NDWI_PATH = '../data/eger_ndwi_2021.tif'
+OUTPUT_NDVI_PATH = os.path.join(BASE_DIR, 'results', 'eger_ndvi_2021.tif')
+OUTPUT_NDWI_PATH = os.path.join(BASE_DIR, 'results', 'eger_ndwi_2021.tif')
 
 def load_band(path: str) -> np.ndarray:
     """Open a single-band raster file and return its data as a float32 array."""
